@@ -1,7 +1,7 @@
 'use client';
 
 import { Customer, fetchCustomers } from '@/app/services/api';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 const CustomerTable: React.FC = () => {
   const [data, setData] = useState<Customer[]>([]);
@@ -10,23 +10,23 @@ const CustomerTable: React.FC = () => {
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     setLoading(true);
     const allData = await fetchCustomers(page, limit);
     if (search) {
-      const filtered = allData.filter((item) =>
+        const filtered = allData.filter((item) =>
         item.Name.toLowerCase().includes(search.toLowerCase())
-      );
-      setData(filtered);
+        );
+        setData(filtered);
     } else {
-      setData(allData);
+        setData(allData);
     }
     setLoading(false);
-  };
+    }, [page, limit, search]);
 
-  useEffect(() => {
+    useEffect(() => {
     loadData();
-  }, [page, search]);
+  }, [loadData]);
 
   return (
     <div className="p-4">

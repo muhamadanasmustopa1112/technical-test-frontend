@@ -6,15 +6,20 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recha
 
 const COLORS = ['#8884d8', '#82ca9d'];
 
+interface GenderStat {
+  name: string;
+  value: number;
+}
+
 const GenderChart = () => {
-  const [data, setData] = useState<any[]>([]);
+  const [data, setData] = useState<GenderStat[]>([]);
 
   useEffect(() => {
     const load = async () => {
       const stats = await fetchGenderStats();
-      const formatted = stats.map((item) => ({
+      const formatted: GenderStat[] = stats.map((item: { _id: string; count: number }) => ({
         name: item._id,
-        value: item.count
+        value: item.count,
       }));
       setData(formatted);
     };
